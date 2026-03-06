@@ -1,0 +1,30 @@
+resource "azurerm_kubernetes_cluster" "aks" {
+
+  name                = var.aks_name
+  location            = var.location
+  resource_group_name = var.rg_name
+  dns_prefix          = "prodaks"
+
+  default_node_pool {
+
+    name       = "systempool"
+    vm_size    = "Standard_B2s"
+    node_count = 2
+
+    enable_auto_scaling = true
+    min_count = 2
+    max_count = 4
+
+    vnet_subnet_id = var.subnet_id
+
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  network_profile {
+    network_plugin = "azure"
+  }
+
+}
